@@ -2,22 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+:root { color-scheme: dark; }
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-[#070b14] text-slate-100 antialiased;
   background-image:
-    radial-gradient(700px 320px at 85% -80px, rgba(232, 65, 66, 0.10), transparent 70%),
-    radial-gradient(600px 300px at -10% 0, rgba(56, 189, 248, 0.08), transparent 70%);
+    radial-gradient(800px 360px at 90% -120px, rgba(232, 65, 66, 0.18), transparent 70%),
+    radial-gradient(700px 320px at -10% 0, rgba(56, 189, 248, 0.10), transparent 70%);
   background-repeat: no-repeat;
 }
-.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-3 text-base font-semibold shadow-sm transition active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100; }
-.btn-primary { @apply btn bg-gradient-to-b from-brand to-brand-dark text-white hover:brightness-110; }
-.btn-ok { @apply btn bg-emerald-600 text-white hover:bg-emerald-700; }
-.btn-warn { @apply btn bg-amber-500 text-white hover:bg-amber-600; }
-.btn-ghost { @apply btn bg-white text-slate-900 border border-slate-300 hover:bg-slate-50; }
-.card { @apply rounded-2xl border border-slate-200 bg-white p-4 shadow-sm; }
+@layer components {
+.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-3 text-base font-semibold transition active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100; }
+.btn-primary { @apply btn bg-gradient-to-b from-brand to-brand-dark text-white shadow-lg shadow-brand/20 hover:brightness-110; }
+.btn-ok { @apply btn bg-emerald-500 text-emerald-950 hover:bg-emerald-400; }
+.btn-warn { @apply btn bg-amber-500 text-amber-950 hover:bg-amber-400; }
+.btn-ghost { @apply btn bg-white/5 text-slate-100 ring-1 ring-inset ring-white/15 hover:bg-white/10; }
+.card { @apply rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-sm; }
 .chip { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold; }
-.seg { @apply grid grid-cols-2 gap-1 rounded-2xl bg-slate-200/70 p-1; }
-.seg-on { @apply rounded-xl bg-white py-2.5 font-bold shadow text-slate-900; }
-.seg-off { @apply rounded-xl py-2.5 font-semibold text-slate-600 hover:text-slate-900; }
+.seg { @apply grid grid-cols-2 gap-1 rounded-2xl bg-white/5 p-1 ring-1 ring-white/10; }
+.seg-on { @apply rounded-xl bg-white/15 py-2.5 font-bold text-white shadow; }
+.seg-off { @apply rounded-xl py-2.5 font-semibold text-slate-400 hover:text-slate-200; }
+}
+.num { font-variant-numeric: tabular-nums; }
 @keyframes flow { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
 .flow-bar { animation: flow 1.1s linear infinite; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+.pop { animation: pop .2s ease-out; }
+
+/* The local/Fuji (wallet) pages use light-theme utility classes; map them onto the dark palette. */
+.text-neutral-600, .text-neutral-700 { color: #94a3b8; }
+.border-neutral-950 { border-color: rgba(255, 255, 255, 0.3); }
+.border-neutral-200, .border-neutral-100 { border-color: rgba(255, 255, 255, 0.1); }
+.bg-red-100 { background: rgba(244, 63, 94, 0.15); }
+.border-red-700 { border-color: rgba(244, 63, 94, 0.5); }
+.text-green-800 { color: #34d399; }
+.text-red-700 { color: #fb7185; }
+.text-orange-700 { color: #fb923c; }
+.text-blue-800 { color: #7dd3fc; }
+input { color: #0f172a; }

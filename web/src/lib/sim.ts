@@ -1,5 +1,7 @@
 "use client";
 import { useSyncExternalStore } from "react";
+import { vnd } from "./format";
+import { toast } from "./toast";
 
 // In-browser simulation of the COD Clearing flow (same rules as the contracts, no chain, no wallet).
 // Rules mirrored from the local demo: DELIVERED = +cod - codFee, RETURNED = -returnFee,
@@ -82,6 +84,7 @@ function finalize(carrier: number, seq: number) {
     msgs: state.msgs.map((x) => (x === m ? { ...x, recorded: true } : x)),
     history: [{ carrier, code: m.code, kind: m.kind, delta: m.delta, tx: m.tx, time: now() }, ...state.history],
   });
+  toast(`Hub recorded ${m.delta > 0 ? "+" : ""}${vnd(m.delta)} for ${m.code}`, m.delta > 0 ? "ok" : "warn");
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -106,6 +109,7 @@ export async function simCourier(code: string, action: "pickup" | "delivered" | 
     orders: state.orders.map((x) => (x === o ? { ...x, status } : x)),
     msgs: [{ carrier: o.carrier, seq: seq[o.carrier], code, kind, tx, recorded: false, delta, time: now() }, ...state.msgs],
   });
+  toast(`${code} ${action === "delivered" ? "delivered" : "returned"}. Message sent to the hub…`, "info");
   const s = seq[o.carrier];
   setTimeout(() => finalize(o.carrier, s), 1800);
   return tx;
@@ -124,6 +128,7 @@ export async function simClosePeriod(): Promise<string> {
     escrow: state.escrow.map((e, i) => ({ ...e, committed: e.committed + usdcAmts[i] })),
     lastClose: t,
   });
+  toast(`Period ${state.epoch - 1} closed. Payouts open for claiming in ${SIM_WINDOW} s`, "ok");
   return fakeHash();
 }
 
@@ -136,6 +141,7 @@ export async function simClaim(epoch: number): Promise<string> {
     escrow: state.escrow.map((e, i) => ({ balance: e.balance - p.usdc[i], committed: e.committed - p.usdc[i] })),
     sellerUsdc: state.sellerUsdc + p.usdc.reduce((s, x) => s + x, 0),
   });
+  toast(`Claimed ${(p.usdc.reduce((s, x) => s + x, 0) / 1e6).toFixed(2)} USDC from both escrows`, "ok");
   return fakeHash();
 }
 

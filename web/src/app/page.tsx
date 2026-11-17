@@ -21,7 +21,7 @@ const STATS = [["2", "carrier L1s, one shared balance"], ["4", "roles in one flo
 export default function Home() {
   return (
     <div className="space-y-12">
-      <section className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 sm:px-12 sm:py-16 text-white shadow-xl">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-[#0b1120] ring-1 ring-white/10 px-6 py-12 sm:px-12 sm:py-16 text-white shadow-xl">
         <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand/40 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-sky-500/20 blur-3xl" />
         <div className="relative">
@@ -44,7 +44,7 @@ export default function Home() {
         {STATS.map(([n, l]) => (
           <div key={l} className="card text-center">
             <div className="text-3xl font-extrabold text-brand">{n}</div>
-            <div className="mt-1 text-sm text-slate-600">{l}</div>
+            <div className="mt-1 text-sm text-slate-400">{l}</div>
           </div>
         ))}
       </section>
@@ -56,9 +56,9 @@ export default function Home() {
             <li key={t} className="relative card">
               <div className="text-2xl">{icon}</div>
               <div className="mt-2 font-bold">{t}</div>
-              <p className="mt-1 text-sm text-slate-600">{d}</p>
-              <span className="absolute right-3 top-3 text-xs font-bold text-slate-300">{i + 1}</span>
-              {i < FLOW.length - 1 && <span className="hidden md:block absolute -right-3 top-1/2 z-10 -translate-y-1/2 text-slate-400">›</span>}
+              <p className="mt-1 text-sm text-slate-400">{d}</p>
+              <span className="absolute right-3 top-3 text-xs font-bold text-slate-600">{i + 1}</span>
+              {i < FLOW.length - 1 && <span className="hidden md:block absolute -right-3 top-1/2 z-10 -translate-y-1/2 text-slate-500">›</span>}
             </li>
           ))}
         </ol>
@@ -69,10 +69,10 @@ export default function Home() {
         <div className="grid gap-3 sm:grid-cols-2">
           {STEPS.map(([h, t, d], i) => (
             <Link key={i} href={h} className="card group flex gap-4 transition hover:-translate-y-0.5 hover:border-brand hover:shadow-md">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-900 text-lg font-extrabold text-white group-hover:bg-brand">{i + 1}</span>
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 text-lg font-extrabold text-white group-hover:bg-brand">{i + 1}</span>
               <span>
                 <span className="block font-bold">{t}</span>
-                <span className="block text-sm text-slate-600">{d}</span>
+                <span className="block text-sm text-slate-400">{d}</span>
               </span>
             </Link>
           ))}
@@ -87,7 +87,7 @@ export default function Home() {
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[["/courier", "Courier", "Mark orders delivered or returned."], ["/seller", "Seller", "One live balance, history and claim."], ["/carrier", "Carrier", "Fund the escrow, watch messages."], ["/admin", "Admin", "Close periods, see carriers."]].map(([h, t, d]) => (
-          <Link key={h} href={h} className="card transition hover:border-slate-400"><div className="font-bold">{t}</div><div className="text-sm text-slate-600">{d}</div></Link>
+          <Link key={h} href={h} className="card transition hover:border-white/30"><div className="font-bold">{t}</div><div className="text-sm text-slate-400">{d}</div></Link>
         ))}
       </section>
     </div>
