@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { MODE } from "@/lib/mode";
 import { countdown } from "@/lib/format";
 import { useNow } from "@/lib/useNow";
-import { simReset, useSim } from "@/lib/sim";
+import { setWallet, simReset, useSim, type Role } from "@/lib/sim";
 
 const STEPS = ["Deliver", "Close period", "Claim"];
 
@@ -23,16 +23,16 @@ export function GuideBar() {
   const left = open ? open.claimableAt - now : 0;
 
   let text: string;
-  let cta: { href: string; label: string } | null = null;
+  let cta: { href: string; label: string; role: Role } | null = null;
   if (step === 0) {
     text = "Mark an order as delivered.";
-    if (path !== "/courier") cta = { href: "/courier", label: "Go to Courier" };
+    if (path !== "/courier") cta = { href: "/courier", label: "Go to Courier", role: "courier" };
   } else if (step === 1) {
     text = "Delivery recorded. Now close the period as Admin.";
-    cta = path === "/admin" ? null : { href: "/admin", label: "Go to Admin" };
+    cta = path === "/admin" ? null : { href: "/admin", label: "Go to Admin", role: "admin" };
   } else if (step === 2) {
     text = left > 0 ? `Dispute window open. Claim unlocks in ${countdown(left)}.` : "Claim is open. Collect the USDC as Seller.";
-    cta = path === "/seller" ? null : { href: "/seller", label: left > 0 ? "Watch on Seller" : "Claim as Seller" };
+    cta = path === "/seller" ? null : { href: "/seller", label: left > 0 ? "Watch on Seller" : "Claim as Seller", role: "seller" };
   } else {
     text = "Demo complete. The seller got one payout from both carriers.";
   }
@@ -54,7 +54,7 @@ export function GuideBar() {
         <p className="flex-1 text-sm font-semibold text-slate-200">
           <span className="sm:hidden mr-1 text-brand">Step {Math.min(step + 1, 3)}/3 ·</span>{text}
         </p>
-        {cta && <Link href={cta.href} className="btn-primary whitespace-nowrap px-4 py-2 text-sm">{cta.label} →</Link>}
+        {cta && <Link href={cta.href} onClick={() => setWallet(cta!.role)} className="btn-primary whitespace-nowrap px-4 py-2 text-sm">{cta.label} →</Link>}
         {step === 3 && <button className="btn-ghost whitespace-nowrap px-4 py-2 text-sm" onClick={simReset}>Replay</button>}
       </div>
     </div>

@@ -13,6 +13,15 @@ export const CARRIER_NAMES = ["Carrier A", "Carrier B"];
 const PREFIX = ["GHA", "GHB"];
 const KEY = "cod-clearing-sim-v1";
 
+export type Role = "courier" | "seller" | "admin" | "carrier";
+// Public Anvil dev addresses, the same accounts the local demo uses.
+export const ROLES: Record<Role, { label: string; address: string; blurb: string; path: string }> = {
+  courier: { label: "Courier", address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", blurb: "Marks parcels delivered or returned", path: "/courier" },
+  seller: { label: "Seller", address: "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65", blurb: "Online shop owner who gets paid", path: "/seller" },
+  admin: { label: "Admin", address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", blurb: "Hub operator who closes periods", path: "/admin" },
+  carrier: { label: "Carrier", address: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", blurb: "Shipping company that funds the escrow", path: "/carrier" },
+};
+
 export type SimOrder = { code: string; carrier: number; cod: number; codFee: number; returnFee: number; status: 2 | 3 | 4 };
 export type SimHist = { carrier: number; code: string; kind: 1 | 2; delta: number; tx: string; time: number };
 export type SimMsg = { carrier: number; seq: number; code: string; kind: 1 | 2; tx: string; recorded: boolean; delta: number; time: number };
@@ -29,6 +38,7 @@ export type SimState = {
   sellerUsdc: number;
   carrierUsdc: number;
   lastClose: number;
+  wallet?: Role | null;
 };
 
 function initial(): SimState {
@@ -42,7 +52,7 @@ function initial(): SimState {
   return {
     orders, balances: [0, 0], history: [], msgs: [], seq: [0, 0], epoch: 1, payouts: [],
     escrow: [{ balance: 500e6, committed: 0 }, { balance: 500e6, committed: 0 }],
-    sellerUsdc: 0, carrierUsdc: 10_000e6, lastClose: 0,
+    sellerUsdc: 0, carrierUsdc: 10_000e6, lastClose: 0, wallet: null,
   };
 }
 
@@ -158,7 +168,11 @@ export async function simDeposit(carrier: number, amountUsdc: number): Promise<s
 }
 
 export function simReset() {
-  set(initial());
+  set({ ...initial(), wallet: state.wallet ?? null });
+}
+
+export function setWallet(role: Role | null) {
+  set({ ...state, wallet: role });
 }
 
 function subscribe(l: () => void) {

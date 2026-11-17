@@ -5,6 +5,7 @@ import { Providers } from "@/lib/app";
 import { Banner } from "@/components/Banner";
 import { ToastHost } from "@/components/ToastHost";
 import { GuideBar } from "@/components/sim/GuideBar";
+import { SimWalletModal } from "@/components/sim/SimWalletModal";
 
 const inter = Inter({ subsets: ["latin", "vietnamese"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="mx-auto max-w-4xl px-4 py-6 pb-28">{children}</main>
           <ToastHost />
           <GuideBar />
+          <SimWalletModal />
         </Providers>
       </body>
     </html>

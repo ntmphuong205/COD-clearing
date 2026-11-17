@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { countdown, short, usdc, usdcFromVnd, vnd, when } from "@/lib/format";
 import { useNow } from "@/lib/useNow";
+import { RoleGate } from "./Wallet";
 import {
   CARRIER_NAMES, SIM_RATE, SIM_WINDOW, simClaim, simClosePeriod, simCourier, simDeposit, useSim, type SimMsg,
 } from "@/lib/sim";
@@ -79,7 +80,7 @@ function Pipeline({ msg }: { msg?: SimMsg }) {
   );
 }
 
-export function SimCourier() {
+function CourierBody() {
   const s = useSim();
   const [ci, setCi] = useState(0);
   const [busy, setBusy] = useState<string | null>(null);
@@ -144,7 +145,7 @@ export function SimCourier() {
   );
 }
 
-export function SimSeller() {
+function SellerBody() {
   const s = useSim();
   const now = useNow();
   const [pending, setPending] = useState(false);
@@ -253,7 +254,7 @@ function Row({ children }: { children: ReactNode }) {
   return <div className="flex items-center justify-between gap-3 py-1.5">{children}</div>;
 }
 
-export function SimAdmin() {
+function AdminBody() {
   const s = useSim();
   const now = useNow();
   const [pending, setPending] = useState(false);
@@ -318,7 +319,7 @@ export function SimAdmin() {
   );
 }
 
-export function SimCarrier() {
+function CarrierBody() {
   const s = useSim();
   const [ci, setCi] = useState(0);
   const [amount, setAmount] = useState("100");
@@ -377,4 +378,20 @@ export function SimCarrier() {
       </section>
     </div>
   );
+}
+
+export function SimCourier() {
+  return <RoleGate role="courier"><CourierBody /></RoleGate>;
+}
+
+export function SimSeller() {
+  return <RoleGate role="seller"><SellerBody /></RoleGate>;
+}
+
+export function SimAdmin() {
+  return <RoleGate role="admin"><AdminBody /></RoleGate>;
+}
+
+export function SimCarrier() {
+  return <RoleGate role="carrier"><CarrierBody /></RoleGate>;
 }
