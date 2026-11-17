@@ -2,10 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-body { @apply bg-white text-neutral-950 antialiased; }
-.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-3 text-base font-bold border-2 border-neutral-950 disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-px; }
-.btn-primary { @apply btn bg-neutral-950 text-white; }
-.btn-ok { @apply btn bg-green-700 text-white border-green-900; }
-.btn-warn { @apply btn bg-orange-600 text-white border-orange-900; }
-.btn-ghost { @apply btn bg-white text-neutral-950; }
-.card { @apply rounded-2xl border-2 border-neutral-200 p-4 bg-white; }
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+  background-image:
+    radial-gradient(700px 320px at 85% -80px, rgba(232, 65, 66, 0.10), transparent 70%),
+    radial-gradient(600px 300px at -10% 0, rgba(56, 189, 248, 0.08), transparent 70%);
+  background-repeat: no-repeat;
+}
+.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-3 text-base font-semibold shadow-sm transition active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100; }
+.btn-primary { @apply btn bg-gradient-to-b from-brand to-brand-dark text-white hover:brightness-110; }
+.btn-ok { @apply btn bg-emerald-600 text-white hover:bg-emerald-700; }
+.btn-warn { @apply btn bg-amber-500 text-white hover:bg-amber-600; }
+.btn-ghost { @apply btn bg-white text-slate-900 border border-slate-300 hover:bg-slate-50; }
+.card { @apply rounded-2xl border border-slate-200 bg-white p-4 shadow-sm; }
+.chip { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold; }
+.seg { @apply grid grid-cols-2 gap-1 rounded-2xl bg-slate-200/70 p-1; }
+.seg-on { @apply rounded-xl bg-white py-2.5 font-bold shadow text-slate-900; }
+.seg-off { @apply rounded-xl py-2.5 font-semibold text-slate-600 hover:text-slate-900; }
+@keyframes flow { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+.flow-bar { animation: flow 1.1s linear infinite; }
