@@ -9,17 +9,17 @@ import { toast } from "./toast";
 
 export const SIM_RATE = 25_000; // VND per USDC
 export const SIM_WINDOW = 60; // seconds
-export const CARRIER_NAMES = ["Carrier A", "Carrier B"];
-const PREFIX = ["GHA", "GHB"];
-const KEY = "cod-clearing-sim-v1";
+export const CARRIER_NAMES = ["Swift Ship", "Green Express"];
+const PREFIX = ["SW", "GE"];
+const KEY = "cod-clearing-sim-v2";
 
 export type Role = "courier" | "seller" | "admin" | "carrier";
 // Public Anvil dev addresses, the same accounts the local demo uses.
 export const ROLES: Record<Role, { label: string; address: string; blurb: string; path: string }> = {
-  courier: { label: "Courier", address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", blurb: "Marks parcels delivered or returned", path: "/courier" },
-  seller: { label: "Seller", address: "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65", blurb: "Online shop owner who gets paid", path: "/seller" },
-  admin: { label: "Admin", address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", blurb: "Hub operator who closes periods", path: "/admin" },
-  carrier: { label: "Carrier", address: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", blurb: "Shipping company that funds the escrow", path: "/carrier" },
+  courier: { label: "Delivery driver", address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", blurb: "Delivers parcels and collects cash from customers", path: "/courier" },
+  seller: { label: "Shop owner", address: "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65", blurb: "Sells online and waits to be paid by shipping companies", path: "/seller" },
+  admin: { label: "Payment manager", address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", blurb: "Runs the shared ledger and closes each payment round", path: "/admin" },
+  carrier: { label: "Shipping company", address: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", blurb: "Owns the delivery fleet and keeps money in reserve for payouts", path: "/carrier" },
 };
 
 export type SimOrder = { code: string; carrier: number; cod: number; codFee: number; returnFee: number; status: 2 | 3 | 4 };
@@ -94,7 +94,7 @@ function finalize(carrier: number, seq: number) {
     msgs: state.msgs.map((x) => (x === m ? { ...x, recorded: true } : x)),
     history: [{ carrier, code: m.code, kind: m.kind, delta: m.delta, tx: m.tx, time: now() }, ...state.history],
   });
-  toast(`Hub recorded ${m.delta > 0 ? "+" : ""}${vnd(m.delta)} for ${m.code}`, m.delta > 0 ? "ok" : "warn");
+  toast(m.delta > 0 ? `Ledger updated: shop is owed ${vnd(m.delta)} more (${m.code})` : `Ledger updated: ${vnd(-m.delta)} fee deducted for the returned parcel (${m.code})`, m.delta > 0 ? "ok" : "warn");
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -119,7 +119,7 @@ export async function simCourier(code: string, action: "pickup" | "delivered" | 
     orders: state.orders.map((x) => (x === o ? { ...x, status } : x)),
     msgs: [{ carrier: o.carrier, seq: seq[o.carrier], code, kind, tx, recorded: false, delta, time: now() }, ...state.msgs],
   });
-  toast(`${code} ${action === "delivered" ? "delivered" : "returned"}. Message sent to the hub…`, "info");
+  toast(`${code} ${action === "delivered" ? "delivered" : "returned"}. Recording it on the shared ledger…`, "info");
   const s = seq[o.carrier];
   setTimeout(() => finalize(o.carrier, s), 1800);
   return tx;
@@ -138,7 +138,7 @@ export async function simClosePeriod(): Promise<string> {
     escrow: state.escrow.map((e, i) => ({ ...e, committed: e.committed + usdcAmts[i] })),
     lastClose: t,
   });
-  toast(`Period ${state.epoch - 1} closed. Payouts open for claiming in ${SIM_WINDOW} s`, "ok");
+  toast(`Payment round ${state.epoch - 1} closed. The shop owner can withdraw in ${SIM_WINDOW} s`, "ok");
   return fakeHash();
 }
 
@@ -151,7 +151,7 @@ export async function simClaim(epoch: number): Promise<string> {
     escrow: state.escrow.map((e, i) => ({ balance: e.balance - p.usdc[i], committed: e.committed - p.usdc[i] })),
     sellerUsdc: state.sellerUsdc + p.usdc.reduce((s, x) => s + x, 0),
   });
-  toast(`Claimed ${(p.usdc.reduce((s, x) => s + x, 0) / 1e6).toFixed(2)} USDC from both escrows`, "ok");
+  toast(`Withdrawn ${(p.usdc.reduce((s, x) => s + x, 0) / 1e6).toFixed(2)} USDC, paid by both shipping companies at once`, "ok");
   return fakeHash();
 }
 

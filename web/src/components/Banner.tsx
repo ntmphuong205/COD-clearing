@@ -6,7 +6,7 @@ import { MODE, useApp } from "@/lib/app";
 import { simReset } from "@/lib/sim";
 import { WalletButton } from "@/components/sim/Wallet";
 
-const LINKS = [["/courier", "Courier"], ["/seller", "Seller"], ["/carrier", "Carrier"], ["/admin", "Admin"]];
+const LINKS = [["/courier", "Driver"], ["/admin", "Manager"], ["/seller", "Shop owner"], ["/carrier", "Shipping co."]];
 
 function Header({ badge, detail, right }: { badge: string; detail: string; right?: ReactNode }) {
   const path = usePathname();
@@ -21,7 +21,7 @@ function Header({ badge, detail, right }: { badge: string; detail: string; right
         </Link>
         <nav className="flex gap-0.5 sm:gap-1 text-sm font-semibold">
           {LINKS.map(([h, l]) => (
-            <Link key={h} href={h} className={`rounded-lg px-2 sm:px-3 py-1.5 transition ${path === h ? "bg-white/15 text-white" : "text-slate-400 hover:bg-white/5 hover:text-slate-200"}`}>{l}</Link>
+            <Link key={h} href={h} className={`whitespace-nowrap rounded-lg px-2 sm:px-3 py-1.5 transition ${path === h ? "bg-white/15 text-white" : "text-slate-400 hover:bg-white/5 hover:text-slate-200"}`}>{l}</Link>
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2 whitespace-nowrap text-xs">

@@ -6,7 +6,7 @@ import { countdown } from "@/lib/format";
 import { useNow } from "@/lib/useNow";
 import { setWallet, simReset, useSim, type Role } from "@/lib/sim";
 
-const STEPS = ["Deliver", "Close period", "Claim"];
+const STEPS = ["Deliver", "Close round", "Withdraw"];
 
 /** Sticky "what do I do next" bar for the simulated demo. */
 export function GuideBar() {
@@ -25,16 +25,18 @@ export function GuideBar() {
   let text: string;
   let cta: { href: string; label: string; role: Role } | null = null;
   if (step === 0) {
-    text = "Mark an order as delivered.";
-    if (path !== "/courier") cta = { href: "/courier", label: "Go to Courier", role: "courier" };
+    text = "Step 1: you are the delivery driver. Tap “Delivered & paid” on any parcel.";
+    if (path !== "/courier") cta = { href: "/courier", label: "Go to Driver", role: "courier" };
   } else if (step === 1) {
-    text = "Delivery recorded. Now close the period as Admin.";
-    cta = path === "/admin" ? null : { href: "/admin", label: "Go to Admin", role: "admin" };
+    text = "Done! The shop is now owed that money. Step 2: the payment manager closes the round.";
+    cta = path === "/admin" ? null : { href: "/admin", label: "Go to Manager", role: "admin" };
   } else if (step === 2) {
-    text = left > 0 ? `Dispute window open. Claim unlocks in ${countdown(left)}.` : "Claim is open. Collect the USDC as Seller.";
-    cta = path === "/seller" ? null : { href: "/seller", label: left > 0 ? "Watch on Seller" : "Claim as Seller", role: "seller" };
+    text = left > 0
+      ? `Round closed. A short waiting time is running, so withdrawing unlocks in ${countdown(left)}.`
+      : "Ready! Step 3: the shop owner withdraws the money.";
+    cta = path === "/seller" ? null : { href: "/seller", label: left > 0 ? "See the shop owner" : "Withdraw as shop owner", role: "seller" };
   } else {
-    text = "Demo complete. The seller got one payout from both carriers.";
+    text = "That is the whole flow: delivery, shared record, one payout. 🎉";
   }
 
   return (

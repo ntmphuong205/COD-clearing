@@ -13,8 +13,8 @@ export function WalletButton() {
   return wallet ? (
     <button onClick={openWalletModal} className="flex items-center gap-2 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-semibold ring-1 ring-white/15 hover:bg-white/15">
       <span className="h-2 w-2 rounded-full bg-emerald-400" />
-      <span>{ROLES[wallet].label}</span>
-      <span className="hidden sm:inline font-mono text-slate-400">{short(ROLES[wallet].address)}</span>
+      <span className="max-w-[7.5rem] truncate">{ROLES[wallet].label}</span>
+      <span className="hidden xl:inline font-mono text-slate-400">{short(ROLES[wallet].address)}</span>
     </button>
   ) : (
     <button onClick={openWalletModal} className="btn-primary whitespace-nowrap px-3 py-1.5 text-xs">Connect<span className="hidden sm:inline">&nbsp;wallet</span></button>
@@ -40,7 +40,7 @@ export function WalletModal() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-xl font-extrabold">Connect wallet</h2>
-            <p className="mt-0.5 text-sm text-slate-400">Pick a demo account. This is simulated: no real wallet or funds.</p>
+            <p className="mt-0.5 text-sm text-slate-400">Pick who you want to be. This is simulated: no real wallet and no real money.</p>
           </div>
           <button onClick={closeWalletModal} className="rounded-lg px-2 py-1 text-slate-400 hover:bg-white/10" aria-label="Close">✕</button>
         </div>
@@ -76,14 +76,14 @@ export function RoleGate({ role, children }: { role: Role; children: ReactNode }
     <div className="mx-auto mt-6 max-w-md space-y-4 rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
       <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/10 text-2xl">🔐</div>
       <div>
-        <h1 className="text-2xl font-extrabold">{wallet ? `Switch to the ${r.label} account` : "Connect a wallet to continue"}</h1>
+        <h1 className="text-2xl font-extrabold">{wallet ? `Switch to the ${r.label.toLowerCase()}` : "Pick who you want to be"}</h1>
         <p className="mt-1 text-slate-400">
-          {wallet ? `You are connected as ${ROLES[wallet].label}. This page is for the ${r.label}.` : `This page is for the ${r.label}: ${r.blurb.toLowerCase()}.`}
+          {wallet ? `You are currently the ${ROLES[wallet].label.toLowerCase()}. This page is for the ${r.label.toLowerCase()}.` : `This page is for the ${r.label.toLowerCase()}, who ${r.blurb.charAt(0).toLowerCase()}${r.blurb.slice(1)}. A wallet is like a login: here you just pick one.`}
         </p>
       </div>
       <div className="rounded-xl bg-white/5 px-3 py-2 font-mono text-sm text-slate-300 ring-1 ring-white/10">{short(r.address)}</div>
       <button className="btn-primary w-full py-3.5 text-lg" onClick={() => { setWallet(role); toast(`Connected as ${r.label}`, "ok"); }}>
-        {wallet ? `Switch to ${r.label}` : `Connect as ${r.label}`}
+        {wallet ? `Switch to the ${r.label.toLowerCase()}` : `Continue as the ${r.label.toLowerCase()}`}
       </button>
       <button className="text-sm font-semibold text-slate-400 underline hover:text-white" onClick={openWalletModal}>Choose another account</button>
     </div>
