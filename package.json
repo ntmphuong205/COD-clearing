@@ -1,0 +1,17 @@
+{
+  "name": "cod-clearing",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "test": "cd contracts && forge test -vv",
+    "demo:local": "cd contracts && forge build --silent && cd .. && pnpm --filter scripts exec tsx demo-local.ts",
+    "seed:local": "MODE=local pnpm --filter scripts exec tsx seed.ts",
+    "deploy:fuji": "bash scripts/deploy-fuji.sh",
+    "seed:fuji": "MODE=fuji pnpm --filter scripts exec tsx seed.ts",
+    "ping:fuji": "MODE=fuji pnpm --filter scripts exec tsx fuji-ping.ts",
+    "web:dev": "NEXT_PUBLIC_MODE=${MODE:-local} pnpm --filter web dev"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "5.1.0"
+  }
+}

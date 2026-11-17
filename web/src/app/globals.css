@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply bg-white text-neutral-950 antialiased; }
+.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-3 text-base font-bold border-2 border-neutral-950 disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-px; }
+.btn-primary { @apply btn bg-neutral-950 text-white; }
+.btn-ok { @apply btn bg-green-700 text-white border-green-900; }
+.btn-warn { @apply btn bg-orange-600 text-white border-orange-900; }
+.btn-ghost { @apply btn bg-white text-neutral-950; }
+.card { @apply rounded-2xl border-2 border-neutral-200 p-4 bg-white; }

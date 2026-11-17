@@ -1,0 +1,10 @@
+node_modules
+.env
+contracts/out
+contracts/cache
+web/.next
+.anvil
+.vercel
+.next
+.DS_Store
+web/tsconfig.tsbuildinfo
